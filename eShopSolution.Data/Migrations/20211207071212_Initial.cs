@@ -238,25 +238,24 @@ namespace eShopSolution.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ProductInCategory",
+                name: "ProductInCategories",
                 columns: table => new
                 {
                     ProductId = table.Column<int>(type: "int", nullable: false),
-                    CategoryId = table.Column<int>(type: "int", nullable: false),
-                    CategoryId1 = table.Column<int>(type: "int", nullable: false)
+                    CategoryId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ProductInCategory", x => new { x.ProductId, x.CategoryId });
+                    table.PrimaryKey("PK_ProductInCategories", x => new { x.ProductId, x.CategoryId });
                     table.ForeignKey(
-                        name: "FK_ProductInCategory_Category_CategoryId1",
-                        column: x => x.CategoryId1,
+                        name: "FK_ProductInCategories_Category_CategoryId",
+                        column: x => x.CategoryId,
                         principalTable: "Category",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_ProductInCategory_Products_CategoryId",
-                        column: x => x.CategoryId,
+                        name: "FK_ProductInCategories_Products_ProductId",
+                        column: x => x.ProductId,
                         principalTable: "Products",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -320,6 +319,59 @@ namespace eShopSolution.Data.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.InsertData(
+                table: "AppConfigs",
+                columns: new[] { "Key", "Value" },
+                values: new object[,]
+                {
+                    { "HomeTitle", "This is homepage of eShopSolution" },
+                    { "HomeKeyWord", "This is keyword of eShopSolution" },
+                    { "HomeDescription", "This is description of eShopSolution" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Category",
+                columns: new[] { "Id", "IsShowOnHome", "ParentId", "SortOrder", "Status" },
+                values: new object[,]
+                {
+                    { 1, true, null, 1, 1 },
+                    { 2, true, null, 2, 1 }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Languages",
+                columns: new[] { "Id", "IsDefault", "Name" },
+                values: new object[,]
+                {
+                    { "vi-VN", true, "Tiếng Việt" },
+                    { "en-US", false, "English" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Products",
+                columns: new[] { "Id", "DateCreated", "OriginalPrice", "Price", "SeoAlias" },
+                values: new object[] { 1, new DateTime(2021, 12, 7, 14, 12, 11, 817, DateTimeKind.Local).AddTicks(5841), 100000m, 200000m, null });
+
+            migrationBuilder.InsertData(
+                table: "CategoryTranslations",
+                columns: new[] { "Id", "CategoryId", "LanguageId", "Name", "SeoAlias", "SeoDescription", "SeoTitle" },
+                values: new object[,]
+                {
+                    { 1, 1, "vi-VN", "Áo Nam", "ao-nam", "Sản phẩm áo thời trang nam", "Sản phẩm áo thời trang nam" },
+                    { 3, 2, "vi-VN", "Áo nữ", "ao-nam", "Sản phẩm áo thời trang nữ", "Sản phẩm áo thời trang nữ" },
+                    { 2, 1, "en-US", "Men shirt", "men-shirt", "The shirt products for men", "The shirt products for men" },
+                    { 4, 2, "en-US", "Women Shirt", "women-shirt", "The shirt products for women", "The shirt products for women" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "ProductTranslations",
+                columns: new[] { "Id", "Description", "Details", "LanguageId", "Name", "ProductId", "SeoAlias", "SeoDescription", "SeoTitle" },
+                values: new object[,]
+                {
+                    { 1, "Áo sơ mi Nam trắng Việt tiến", "Áo sơ mi Nam trắng Việt tiến", "vi-VN", "Áo sơ mi Nam trắng Việt tiến", 1, "ao-so-mi-nam-trang-viet-tien", "Áo sơ mi Nam trắng Việt tiến", "Áo sơ mi Nam trắng Việt tiến" },
+                    { 2, "Viet Tien Men T-Shirt", "Viet Tien Men T-Shirt", "en-US", "Viet Tien Men T-Shirt", 1, "viet-tien-men-t-shirt", "Viet Tien Men T-Shirt", "Viet Tien Men T-Shirt" }
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_Cart_AppUserId",
                 table: "Cart",
@@ -346,14 +398,9 @@ namespace eShopSolution.Data.Migrations
                 column: "AppUserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ProductInCategory_CategoryId",
-                table: "ProductInCategory",
+                name: "IX_ProductInCategories_CategoryId",
+                table: "ProductInCategories",
                 column: "CategoryId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ProductInCategory_CategoryId1",
-                table: "ProductInCategory",
-                column: "CategoryId1");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ProductTranslations_LanguageId",
@@ -389,7 +436,7 @@ namespace eShopSolution.Data.Migrations
                 name: "OrderDetails");
 
             migrationBuilder.DropTable(
-                name: "ProductInCategory");
+                name: "ProductInCategories");
 
             migrationBuilder.DropTable(
                 name: "ProductTranslations");
